@@ -1,6 +1,6 @@
 Task/ClientApp/node_modules
 
-.vscode
+*/.vscode
 
 Task/bin
 
