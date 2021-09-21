@@ -10,6 +10,7 @@ namespace Task
 {
     public class User
     {
+        
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int id { get; set; }
@@ -19,6 +20,7 @@ namespace Task
        
         public bool Active { get; set; } = false;
 
+        
 
     }
 }

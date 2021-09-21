@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-namespace Task.Model
+namespace Task.DataLayer.Database
 {
     public class ApplicationContext : DbContext
     {

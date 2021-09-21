@@ -4,38 +4,42 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Task.Model; 
+using Task.BusinessLogicLayer.IServices;
 namespace Task.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
     {
-        ApplicationContext db;
+        IUserService _userService;
 
-        public UsersController(ApplicationContext context)
+        public UsersController(IUserService _userService)
         {
-            db = context;
-            if (!db.users.Any())
-            {
-                db.users.Add(new User { Name = "Alan" });
-                db.users.Add(new User { Name = "Tom" });
-                db.users.Add(new User { Name = "Bob" });
-                db.users.Add(new User { Name = "Christina" });
-                db.users.Add(new User { Name = "Alice" });
-                db.users.Add(new User { Name = "Daniel" });
-                db.users.Add(new User { Name = "Alexandr" });
-                db.users.Add(new User { Name = "Bill" });
-                db.users.Add(new User { Name = "Michael" });
-                db.users.Add(new User { Name = "Mark" });
-                db.SaveChanges();
-            }
+            this._userService = _userService;
         }
 
+        [Route("data")]
         [HttpGet]
-        public IEnumerable<User> Get()
+        public List<User> Get()
         {
-            return db.users.ToList();
+            return _userService.GetUsers();
+        }
+        [Route("count")]
+        [HttpGet]
+        public int[] GetCount()
+        {
+            int[] Count = new int[2];
+            List<User> users = _userService.GetUsers();
+            Count[0] = users.Count;
+            foreach(User u in users)
+            {
+                if (u.Active)
+                {
+                    Count[1]++;
+                }
+            }
+            return Count;
+          
         }
 
         [HttpPut]
@@ -44,8 +48,8 @@ namespace Task.Controllers
 
             if (ModelState.IsValid)
             {
-                db.Update(user);
-                db.SaveChanges();
+                _userService.UpdateUser(user);
+                
                 return Ok(user);
             }
             return BadRequest(ModelState);

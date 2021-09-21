@@ -8,8 +8,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Task.Model;
+using Task.DataLayer.Database;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
+using Task.DataLayer.IRepository;
+using Task.DataLayer.Repository;
+using Task.BusinessLogicLayer.IServices;
+using Task.BusinessLogicLayer.Services;
 namespace Task
 {
     public class Startup
@@ -23,7 +27,12 @@ namespace Task
             {
                 configuration.RootPath = "ClientApp/dist";
             });
-            services.AddControllers();
+
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddMvc();
+
+            services.AddTransient<IUserService, UserService>();
+            
         }
 
       

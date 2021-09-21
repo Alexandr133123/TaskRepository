@@ -15,22 +15,14 @@ export class AppComponent implements OnInit{
 
     users: User[];
     user: User;
-    TotalCount: number = 0;
-    ActiveCount: number = 0;
+    Count: number[];
     ngOnInit(){
-        this.loadUsers();
+        this.loadData();
     
     }
 
     setCount(){
-        if(this.users!=undefined){
-          this.TotalCount= this.users.length;
-            this.users.forEach(u => {
-                if(u.active){
-                 this.ActiveCount++;
-                 }
-            });
-        }
+            
     }
 
     constructor(private dataservice: DataService,public Modal: NgbModal){}
@@ -40,14 +32,15 @@ export class AppComponent implements OnInit{
             this.Modal.open(content);
     }
    
-    loadUsers(){
+    loadData(){
         this.dataservice.getUsers().subscribe((data: User[])=> this.users = data);
+        this.dataservice.getCount().subscribe((data: number[]) => this.Count = data);
     }
     
     BoolChange(u: User){
         this.user = u;
         this.user.active = !this.user.active;
-        this.dataservice.updateBool(this.user).subscribe(data => this.loadUsers());
+        this.dataservice.updateBool(this.user).subscribe(data => this.loadData());
 
     }
 
