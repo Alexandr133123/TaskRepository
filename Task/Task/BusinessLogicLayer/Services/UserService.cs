@@ -30,5 +30,20 @@ namespace Task.BusinessLogicLayer.Services
            
         }
 
+        public int[] GetCount()
+        {
+            int[] Count = new int[2];
+            List<User> users = _userRepository.GetAllUsers().ToList();
+            Count[0] = users.Count;
+            foreach (User u in users)
+            {
+                if (u.Active)
+                {
+                    Count[1]++;
+                }
+            }
+            return Count;
+        }
+
     }
 }

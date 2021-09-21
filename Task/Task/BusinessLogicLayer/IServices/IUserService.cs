@@ -9,5 +9,7 @@ namespace Task.BusinessLogicLayer.IServices
     {
         List<User> GetUsers();
         void UpdateUser(User user);
+
+        int[] GetCount();
     }
 }
