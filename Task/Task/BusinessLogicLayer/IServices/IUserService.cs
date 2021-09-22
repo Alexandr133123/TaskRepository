@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Task.BusinessLogicLayer.DTO;
 
 namespace Task.BusinessLogicLayer.IServices
 {
@@ -9,7 +10,7 @@ namespace Task.BusinessLogicLayer.IServices
     {
         List<User> GetUsers();
         void UpdateUser(User user);
-
-        int[] GetCount();
+        UsersCountResult GetUsersCountInfo();
+        
     }
 }

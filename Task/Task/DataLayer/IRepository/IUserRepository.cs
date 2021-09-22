@@ -10,7 +10,7 @@ namespace Task.DataLayer.IRepository
         void InitData();
         List<User> GetAllUsers();
         void UpdateUser(User user);
-
-
+        int TotalActiveUsersCount();
+        int TotalUsersCount();
     }
 }

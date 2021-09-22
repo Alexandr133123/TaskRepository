@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Task.BusinessLogicLayer.IServices;
+using Task.BusinessLogicLayer.DTO;
+
 namespace Task.Controllers
 {
     [Route("api/[controller]")]
@@ -20,16 +22,15 @@ namespace Task.Controllers
 
         [Route("data")]
         [HttpGet]
-        public List<User> Get()
+        public List<User> GetUsersData()
         {
             return _userService.GetUsers();
         }
         [Route("count")]
         [HttpGet]
-        public int[] GetCount()
+        public UsersCountResult GetUsersCountData()
         {
-            return _userService.GetCount();
-          
+            return _userService.GetUsersCountInfo();
         }
 
         [HttpPut]

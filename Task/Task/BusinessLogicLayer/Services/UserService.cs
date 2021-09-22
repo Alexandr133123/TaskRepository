@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Task.BusinessLogicLayer.IServices;
 using Task.DataLayer.Repository;
 using Task.DataLayer.IRepository;
+using Task.BusinessLogicLayer.DTO;
 namespace Task.BusinessLogicLayer.Services
 {
     public class UserService : IUserService
@@ -30,19 +31,13 @@ namespace Task.BusinessLogicLayer.Services
            
         }
 
-        public int[] GetCount()
+        public UsersCountResult GetUsersCountInfo()
         {
-            int[] Count = new int[2];
-            List<User> users = _userRepository.GetAllUsers().ToList();
-            Count[0] = users.Count;
-            foreach (User u in users)
-            {
-                if (u.Active)
-                {
-                    Count[1]++;
-                }
-            }
-            return Count;
+            UsersCountResult result = new UsersCountResult();
+            result.totalCount = _userRepository.TotalUsersCount();
+            result.activeCount = _userRepository.TotalActiveUsersCount();
+
+            return result;
         }
 
     }

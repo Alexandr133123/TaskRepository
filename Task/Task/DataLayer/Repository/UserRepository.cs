@@ -43,6 +43,24 @@ namespace Task.DataLayer.Repository
             }
             
         }
+           
+        public int TotalUsersCount()
+        {
+            return db.users.Count();
+        }
+
+        public int TotalActiveUsersCount()
+        {
+            int active = 0;
+            foreach(User u in db.users)
+            {
+                if (u.Active)
+                {
+                    active++;
+                }
+            }
+            return active;
+        }
 
         public void UpdateUser(User user)
         {

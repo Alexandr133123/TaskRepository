@@ -20,7 +20,5 @@ namespace Task
        
         public bool Active { get; set; } = false;
 
-        
-
     }
 }

@@ -1,8 +1,9 @@
 import { Component } from "@angular/core";
 import { DataService } from "../service/data-service";
 import { OnInit } from "@angular/core";
-import { User } from "../User";
+import { User } from "../Models/User";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import {UsersCountResult} from "../Models/UsersCountResult";
 
 @Component({
 
@@ -13,29 +14,29 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
 export class AppComponent implements OnInit{
 
+
     users: User[];
     user: User;
-    Count: number[];
+    usersCount: UsersCountResult = new UsersCountResult();
+   
     ngOnInit(){
         this.loadData();
-    
     }
 
-    setCount(){
-            
-    }
 
     constructor(private dataservice: DataService,public Modal: NgbModal){}
 
     open(content){
-            this.setCount();
+    
             this.Modal.open(content);
     }
    
     loadData(){
-        this.dataservice.getUsers().subscribe((data: User[])=> this.users = data);
-        this.dataservice.getCount().subscribe((data: number[]) => this.Count = data);
+        this.dataservice.getUsers().subscribe((data: User[]) => this.users = data);
+        this.dataservice.getCount().subscribe((data: UsersCountResult) => this.usersCount = data);
     }
+
+  
     
     BoolChange(u: User){
         this.user = u;

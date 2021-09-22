@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 import {HttpClient} from "@angular/common/http";
-import {User} from "../User";
-import { count } from "console";
+import {User} from "../Models/User";
 
 
 @Injectable()
@@ -16,7 +15,9 @@ export class DataService{
      }
      
      getCount(){
+        
          return this.http.get(this.url + "/count");
+         
      }
 
      updateBool(user: User ){
