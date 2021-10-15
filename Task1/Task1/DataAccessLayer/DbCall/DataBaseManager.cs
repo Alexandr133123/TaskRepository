@@ -11,11 +11,11 @@ using Task1.DBLayer.Model;
 
 namespace Task1.DBLayer.DbCall
 {
-    class DbOperations 
+    class DataBaseManager 
     {
         private InternshipContext db;
 
-        public DbOperations()
+        public DataBaseManager()
         {
             db = new InternshipContext();
             db.ChangeTracker.AutoDetectChangesEnabled = false;
@@ -33,7 +33,6 @@ namespace Task1.DBLayer.DbCall
         {
 
             var groups = source.OrderBy(i => i.PersonName).GroupBy(i => i.FkParentPersonId);
-
             var roots = groups.FirstOrDefault(g => g.Key == null).OrderBy(root => root.PersonName).ToList();
 
             if (roots.Count > 0)
@@ -41,9 +40,7 @@ namespace Task1.DBLayer.DbCall
                 var dict = groups.Where(g => g.Key != null).ToDictionary(g => g.Key, g => g.ToList());
                 for (int i = 0; i < roots.Count; i++)
                 {
-                    
                     AddChildren(roots[i], dict);
-
                 }
             }
 
@@ -52,12 +49,11 @@ namespace Task1.DBLayer.DbCall
 
         private void AddChildren(Person person, IDictionary<int?, List<Person>> source)
         {
-            
-
+    
             if (source.ContainsKey(person.PkPersonId))
             {
-                
                 person.InverseFkParentPerson = source[person.PkPersonId];
+
                 for (int i = 0; i < person.InverseFkParentPerson.Count; i++)
                     AddChildren(person.InverseFkParentPerson[i], source);
             }
@@ -66,7 +62,5 @@ namespace Task1.DBLayer.DbCall
                 person.InverseFkParentPerson = new List<Person>();
             }
         }
-
-
     }
 }

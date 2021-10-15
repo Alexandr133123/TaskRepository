@@ -8,25 +8,25 @@ using Task1.DBLayer.DbCall;
 using Task1.DBLayer.Model;
 using System.Xml.Linq;
 using Newtonsoft.Json;
+using Microsoft.Extensions.Configuration;
 using System.IO;
-
 
 namespace Task1.BusinessLogicLayer.FileCreator
 {
-    class FileCreator
+    class FileCreationHandler
     {
-        DbOperations db;
-
-       public FileCreator()
+        DataBaseManager db;
+        IConfigurationRoot config;
+       
+       public FileCreationHandler()
         {
             
-            Directory.CreateDirectory(@"../../../FileContainer/txt");
+            config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+            Directory.CreateDirectory(config["TxtFilePath"]);
+            Directory.CreateDirectory(config["XmlFilePath"]);
+            Directory.CreateDirectory(config["JsonFilePath"]);
 
-            Directory.CreateDirectory(@"../../../FileContainer/xml");
-
-            Directory.CreateDirectory(@"../../../FileContainer/json");
-
-            db = new DbOperations();
+            db = new DataBaseManager();
   
         }
 
@@ -37,7 +37,7 @@ namespace Task1.BusinessLogicLayer.FileCreator
 
         public void CreateJson()
         {
-            using (StreamWriter tw = new StreamWriter(@"../../../FileContainer/txt/Person.json", false))
+            using (StreamWriter tw = new StreamWriter($"{config["JsonFilePath"]}/Person.json", false))
             {
 
                 tw.WriteLine(JsonConvert.SerializeObject(db.GetAllPeople(), new JsonSerializerSettings
@@ -57,96 +57,64 @@ namespace Task1.BusinessLogicLayer.FileCreator
 
             }
         }
-
-        
+    
         public void CreateTxt()
         {
-            PrintTxt();
-        }
+            StringBuilder text = new StringBuilder(20000);
 
-
-        private void PrintTxt()
-        {
-
-            StringBuilder text = new StringBuilder("");
-
-            using (StreamWriter tw = new StreamWriter(@"../../../FileContainer/txt/Person.txt", false))
-            {
-
+            using (StreamWriter tw = new StreamWriter($"{config["TxtFilePath"]}/Person.txt", false))
+            {               
+                
                 PrintChildTxt(db.GetAllPeople(), text, tw);
-
                 tw.Close();
             }
         }
 
         private void PrintChildTxt(IEnumerable<Person> people, StringBuilder temp, StreamWriter tw)
         {
-
-            
-            foreach (Person p in  people)
+            foreach (Person p in people)
             {
-
                 if (p.InverseFkParentPerson != null)
                 {
-
-                    temp.Append(p.PersonName + $"({ p.PkPersonId})");
-
+                    temp.Append($"{p.PersonName}({p.PkPersonId})");
                     tw.WriteLine(temp);
+                    temp.Append(" --- ");
 
-                    temp.Append("---");
-                    
                     PrintChildTxt(p.InverseFkParentPerson, temp, tw);
                 }
                 else
                 {
-
-                    tw.WriteLine(p.PersonName + $"({p.PkPersonId})\n");
-
-                    
-
+                    temp.Append(" --- ");
+                    tw.WriteLine($"{p.PersonName}({p.PkPersonId})");
                 }
 
-                temp.Replace("---"+p.PersonName + $"({p.PkPersonId})", "");
-            }
-
-           
-            
+                temp.Replace($"{p.PersonName}({p.PkPersonId}) --- ", "");
+            }            
         }
 
         private void WriteXmlFile(IEnumerable<Person> people)
         {
-
             XDocument xDoc = new XDocument();
-
             XElement xRoot = new XElement("root");
 
             foreach (Person p in people)
             {
-
                 XElement xNode = new XElement("node");
-
                 XAttribute xId = new XAttribute("id", p.PkPersonId);
-
                 XElement xName = new XElement("name", p.PersonName);
 
                 xNode.Add(xId, xName);
 
                 if (p.InverseFkParentPerson.Count != 0)
-                {
-
+                { 
                     xNode.Add(WriteXmlChild(p));
-
                 }
 
                 xRoot.Add(xNode);
-
-
-
             }
 
             xDoc.Add(xRoot);
-
-            xDoc.Save(@"../../../FileContainer/txt/person.xml");
+            xDoc.Save($"{config["XmlFilePath"]}/Person.xml");
         }
 
          private XElement WriteXmlChild(Person person)
@@ -157,31 +125,20 @@ namespace Task1.BusinessLogicLayer.FileCreator
                 {
 
                     XElement xNode = new XElement("node");
-
                     XAttribute xId = new XAttribute("id", ch.PkPersonId);
-
                     XElement xName = new XElement("name", ch.PersonName);
 
                     xNode.Add(xId, xName);
 
                     if (ch.InverseFkParentPerson.Count != 0)
                     {
-
                         xNode.Add(WriteXmlChild(ch));
-
                     }
 
                     xChildren.Add(xNode);
-
                 }
-
-
                 return xChildren;
           }
-
-
-
-
 
     }
 }

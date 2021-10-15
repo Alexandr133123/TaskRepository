@@ -14,11 +14,6 @@ namespace Task1.DBLayer.DB
         {
         }
 
-        public InternshipContext(DbContextOptions<InternshipContext> options)
-            : base(options)
-        {
-        }
-
         public  DbSet<Person> People { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -26,17 +21,12 @@ namespace Task1.DBLayer.DB
            
             if (!optionsBuilder.IsConfigured)
             {
-
                 var builder = new ConfigurationBuilder();
-
                 builder.SetBasePath(Directory.GetCurrentDirectory());
-
                 builder.AddJsonFile("appsettings.json");
-
                 var config = builder.Build();
 
                 string connectionString = config.GetConnectionString("DefaultConnection");
-
                 optionsBuilder.UseSqlServer(connectionString);
             }
         }
@@ -51,11 +41,8 @@ namespace Task1.DBLayer.DB
                     .HasName("PK__Person__1EA68AAD453CD310");
 
                 entity.ToTable("Person");
-
                 entity.Property(e => e.PkPersonId).HasColumnName("PK_PersonId");
-
                 entity.Property(e => e.FkParentPersonId).HasColumnName("FK_ParentPersonId");
-
                 entity.Property(e => e.PersonName)
                     .IsRequired()
                     .HasMaxLength(100);

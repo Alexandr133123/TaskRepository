@@ -3,61 +3,83 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 using System.Linq;
-using System.Collections.Generic;
-using Task1.DBLayer.DbCall;
 using System.Diagnostics;
 using Task1.BusinessLogicLayer.FileCreator;
-using Task1.DBLayer.Model;
 
 namespace Task1
 {
+
+
+    struct ConsoleAction
+    {
+        public void PrintMenu()
+        {
+            Console.WriteLine("1 - Create .txt Fille\n2 - Create .xml File\n3 - Create .json File\n0 - Execute Exit");
+        }
+
+        public void PrintSuccessMassage()
+        {
+            Console.WriteLine("\nSuccess, press any key to continue...");
+            Console.Read();
+        }
+
+        public void PrintExitMassage()
+        {
+            Console.WriteLine("\n Session Ended");
+        }
+        public void PrintErrorMassage() 
+        {
+            Console.WriteLine("Error - Wrong Key\n Press any key...");
+            Console.Read();
+        }
+    }
 
     class Program
     {
        
         static void Main(string[] args)
         {
-
-           
-            FileCreator fc = new FileCreator();
-
+            
+            FileCreationHandler fc = new FileCreationHandler();
             ConsoleKeyInfo keyInfo;
-
-            Console.WriteLine("1 - Create .txt Fille\n2 - Create .xml File\n3 - Create .json File");
-
-            keyInfo = Console.ReadKey();
-
-            Console.WriteLine();
-
-            switch (keyInfo.Key)
+            ConsoleAction action;
+            do
             {
-                case ConsoleKey.D1:
-                   
-                    fc.CreateTxt();
-                   
-                 break;
+                var sw = new Stopwatch();
+                Console.Clear();
+                action.PrintMenu();
+                keyInfo = Console.ReadKey();
+                switch (keyInfo.Key)
+                {
+                    case ConsoleKey.D1:
+                        fc.CreateTxt();
+                        action.PrintSuccessMassage();
+                        break;
 
-                case ConsoleKey.D2:
-                  
-                    fc.CreateXml();
-                    
-                break;
-                case ConsoleKey.D3:
-                   
-                    fc.CreateJson();
-                
-                break;
+                    case ConsoleKey.D2:
+                        fc.CreateXml();
+                        action.PrintSuccessMassage();
+                        Console.ReadKey();
+                        break;
 
-                default:
+                    case ConsoleKey.D3:
+                        fc.CreateJson();
+                        action.PrintSuccessMassage();
+                        Console.ReadKey();
+                        break;
 
-                    Console.WriteLine("Wrong key");
+                    case ConsoleKey.D0:
+                        action.PrintExitMassage();
+                        break;
+                        
+                    default:
+                        action.PrintErrorMassage();
+                        break;
 
-                break;
-            }
+                }
+
+            } while (keyInfo.Key != ConsoleKey.D0);
            
-            
-            
-            
         }
     }
 }
