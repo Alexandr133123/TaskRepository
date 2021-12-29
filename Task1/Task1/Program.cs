@@ -17,17 +17,17 @@ namespace Task1
             Console.WriteLine("1 - Create .txt Fille\n2 - Create .xml File\n3 - Create .json File\n0 - Execute Exit");
         }
 
-        public void PrintSuccessMassage()
+        public void PrintSuccessMessage()
         {
             Console.WriteLine("\nSuccess, press any key to continue...");
             Console.Read();
         }
 
-        public void PrintExitMassage()
+        public void PrintExitMessage()
         {
             Console.WriteLine("\n Session Ended");
         }
-        public void PrintErrorMassage() 
+        public void PrintErrorMessage() 
         {
             Console.WriteLine("Error - Wrong Key\n Press any key...");
             Console.Read();
@@ -41,39 +41,42 @@ namespace Task1
         {
             
             FileCreationHandler fc = new FileCreationHandler();
+            var sw = new Stopwatch();
             ConsoleKeyInfo keyInfo;
             ConsoleAction action;
             do
             {
-                var sw = new Stopwatch();
                 Console.Clear();
                 action.PrintMenu();
                 keyInfo = Console.ReadKey();
                 switch (keyInfo.Key)
                 {
                     case ConsoleKey.D1:
+                        sw.Start();
                         fc.CreateTxt();
-                        action.PrintSuccessMassage();
+                        sw.Stop();
+                        Console.WriteLine(sw.Elapsed);
+                        action.PrintSuccessMessage();
                         break;
 
                     case ConsoleKey.D2:
                         fc.CreateXml();
-                        action.PrintSuccessMassage();
+                        action.PrintSuccessMessage();
                         Console.ReadKey();
                         break;
 
                     case ConsoleKey.D3:
                         fc.CreateJson();
-                        action.PrintSuccessMassage();
+                        action.PrintSuccessMessage();
                         Console.ReadKey();
                         break;
 
                     case ConsoleKey.D0:
-                        action.PrintExitMassage();
+                        action.PrintExitMessage();
                         break;
                         
                     default:
-                        action.PrintErrorMassage();
+                        action.PrintErrorMessage();
                         break;
 
                 }
